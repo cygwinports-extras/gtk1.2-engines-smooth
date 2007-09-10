@@ -1,0 +1,32 @@
+theme_v=0.5.8
+
+DESCRIPTION="GTK+ 1.2 Smooth theme"
+HOMEPAGE="http://sourceforge.net/projects/smooth-engine/"
+SRC_URI="
+	mirror://sourceforge/smooth-engine/gtk-smooth-engine-${PV}.tar.gz
+	mirror://sourceforge/smooth-engine/smooth-themes-${theme_v}.tar.gz
+"
+SRC_DIR="gtk-smooth-engine-${PV}"
+
+CYGCONF_ARGS="--enable-gtk-1 --disable-gtk-2"
+
+src_compile() {
+	cd ${S}
+	cygautoreconf
+	mkdir -p ${B}engines
+	cd ${B}/engines
+	CYGCONF_SOURCE=${S} cygconf
+	cygmake
+
+	mkdir -p ${B}/themes
+	cd ${B}/themes
+	CYGCONF_SOURCE=${S}/../smooth-themes-${theme_v} cygconf
+	cygmake
+}
+
+src_install() {
+	cd ${B}/engines
+	cyginstall
+	cd ${B}/themes
+	cyginstall
+}
